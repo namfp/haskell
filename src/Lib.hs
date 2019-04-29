@@ -32,14 +32,28 @@ getElementWithLeftAndRight list =
     []
     list
 
+getChildren :: GameTreeZipper a -> [GameTreeZipper a]
+getChildren (TerminatedNode _, _) = []
+getChildren (PlayingNode d (Just children), treeCrumbs) =
+  let withLeftAndRight = getElementWithLeftAndRight children
+      convertToZipper (elem, left, right) =
+        (elem, GameTreeCrumb d left right : treeCrumbs)
+   in map convertToZipper withLeftAndRight
+
 data Cell
   = NotPlayed
   | Self
   | Opponent
 
-data NextPlayer = SelfPlayer | OpponentPlayer
+data Player
+  = SelfPlayer
+  | OpponentPlayer
 
-data Board = Board NextPlayer [[Cell]]
+type NextPlayer = Player
+
+data Board =
+  Board NextPlayer
+        [[Cell]]
 
 data VisitedBoard = VisitedBoard
   { q     :: Int
@@ -51,13 +65,21 @@ data GameNode
   = Unvisited Board
   | Visited VisitedBoard
 
-getChildren :: GameTreeZipper a -> [GameTreeZipper a]
-getChildren (TerminatedNode _, _) = []
-getChildren (PlayingNode d (Just children), treeCrumbs) =
-  let withLeftAndRight = getElementWithLeftAndRight children
-      convertToZipper (elem, left, right) =
-        (elem, GameTreeCrumb d left right : treeCrumbs)
-   in map convertToZipper withLeftAndRight
+-- computeWinner :: Board -> Maybe Player
+-- computeWinner board =
+--   let positions =
+--         [ [(0, 0), (1, 0), (2, 0)]
+--         , [(0, 1), (1, 1), (2, 1)]
+--         , [(0, 2), (1, 2), (2, 2)]
+--         , [(0, 0), (0, 1), (0, 2)]
+--         , [(1, 0), (1, 1), (1, 2)]
+--         , [(2, 0), (2, 1), (2, 2)]
+--         , [(0, 0), (1, 1), (2, 2)]
+--         , [(0, 2), (1, 1), (2, 0)]
+--         ]
+--         isPositionWinner position player
+--         isWinner player = map ()
+--    in Nothing
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
