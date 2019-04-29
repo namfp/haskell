@@ -2,6 +2,10 @@ module Lib
   ( someFunc
   ) where
 
+import           Data.List
+import Data.Array.IArray
+
+
 data GameTree a
   = TerminatedNode a
   | PlayingNode a
@@ -48,6 +52,7 @@ data Cell
 data Player
   = SelfPlayer
   | OpponentPlayer
+  deriving (Eq)
 
 type NextPlayer = Player
 
@@ -66,20 +71,21 @@ data GameNode
   | Visited VisitedBoard
 
 -- computeWinner :: Board -> Maybe Player
--- computeWinner board =
---   let positions =
---         [ [(0, 0), (1, 0), (2, 0)]
---         , [(0, 1), (1, 1), (2, 1)]
---         , [(0, 2), (1, 2), (2, 2)]
---         , [(0, 0), (0, 1), (0, 2)]
---         , [(1, 0), (1, 1), (1, 2)]
---         , [(2, 0), (2, 1), (2, 2)]
---         , [(0, 0), (1, 1), (2, 2)]
---         , [(0, 2), (1, 1), (2, 0)]
---         ]
---         isPositionWinner position player
---         isWinner player = map ()
---    in Nothing
+-- computeWinner (Board nextPlayer board) =
+--   let currentPlayer =
+--         case nextPlayer of
+--           SelfPlayer     -> OpponentPlayer
+--           OpponentPlayer -> SelfPlayer
+--       playedCell player cell =
+--         case cell of
+--           NotPlayed -> False
+--           Self      -> currentPlayer == SelfPlayer
+--           Opponent  -> currentPlayer == OpponentPlayer
+--       isLineWinner player line = all (playedCell player) line
+--       isLinesWinner player = any (isLineWinner player) board
+--       transposedBoard = transpose board
+--       isColumnsWinner player = isLinesWinner player transposedBoard
+   in Nothing
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
